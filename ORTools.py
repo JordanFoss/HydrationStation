@@ -51,7 +51,7 @@ for t in T:
     for i in IA:
         solver.Add(y[t][i] <= x[i])
         
-#Must meet the water require for the period
+#Must meet the water requirement for the period
 for t in T:
     for i in IA:
         solver.Add(y[t][i]*WaterDisHour[i] >= WaterLevel[t])
