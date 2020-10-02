@@ -18,7 +18,7 @@ T = range(len(TimeSteps))
 WaterLevel = [6000/365 for t in T]
 
 #Water distribution per hour for irrigation asset
-WaterDisHour = [1110, 1110]
+WaterDisHour = [1110, 59800]
 
 #Cost of the irrigation asset
 CostOfAssets = [43000, 119000]
