@@ -4,9 +4,18 @@ from ortools.linear_solver import pywraplp
 # Create the mip solver with the CBC backend.
 solver = pywraplp.Solver.CreateSolver('Irrigation Assets', 'CBC')
 
+#Sets
+IAssets = ["Walking Irrigator", "Centre Pivot Irrigator"]
+
+#Currently each timestep is a day
+TimeSteps = [1 for i in range(365*20)]
+
+IA = range(len(IAssets))
+T = range(len(TimeSteps))
+
 #Data
 #6 megalitres per hectare per year, so this is dependent on time step chosen
-WaterLevel = [6, 6]
+WaterLevel = [6000/365 for t in T]
 
 #Water distribution per hour for irrigation asset
 WaterDisHour = [1110, 1]
@@ -18,14 +27,7 @@ CostOfAssets = [43000, 119000]
 EnergyCostHour = [30, 18.5]
 
 #Cost of labour for running the machine
-LabourCostHour = [30.5, 30.5]
-
-#Sets
-IAssets = ["Walking Irrigator", "Centre Pivot Irrigator"]
-TimeSteps = [0]
-
-IA = range(len(IAssets))
-T = range(len(TimeSteps))
+LabourCostHour = [30.5 for i in IA]
 
 #Variables
 
@@ -56,7 +58,6 @@ for t in T:
         solver.Add(y[t][i]*WaterDisHour[i] >= WaterLevel[t])
 
 print('Number of constraints =', solver.NumConstraints())
-
 
 status = solver.Solve()
 
