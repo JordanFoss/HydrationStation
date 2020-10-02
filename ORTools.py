@@ -8,7 +8,7 @@ solver = pywraplp.Solver.CreateSolver('Irrigation Assets', 'CBC')
 IAssets = ["Walking Irrigator", "Centre Pivot Irrigator"]
 
 #Currently each timestep is a day
-TimeSteps = [1 for i in range(365*20)]
+TimeSteps = [i for i in range(365*20)]
 
 IA = range(len(IAssets))
 T = range(len(TimeSteps))
@@ -18,7 +18,7 @@ T = range(len(TimeSteps))
 WaterLevel = [6000/365 for t in T]
 
 #Water distribution per hour for irrigation asset
-WaterDisHour = [1110, 1]
+WaterDisHour = [1110, 1110]
 
 #Cost of the irrigation asset
 CostOfAssets = [43000, 119000]
@@ -42,7 +42,6 @@ print('Number of variables =', solver.NumVariables())
 
 #Objective Function
 
-# Maximize x + 10 * y.
 solver.Minimize(sum(y[t][i]*(LabourCostHour[i] + EnergyCostHour[i]) for i in IA for t in T)
                 + sum(x[i]*CostOfAssets[i] for i in IA))
 
@@ -65,8 +64,10 @@ if status == pywraplp.Solver.OPTIMAL:
     print('Solution:')
     print('Objective value =', solver.Objective().Value())
     for i in IA:
-        print('x =', x[i].solution_value())
-        for t in T:
-            print('y =', y[t][i].solution_value())
+        if x[i].solution_value() > 0.9:
+            print('Irrigation asset', IAssets[i], 'is purchased.')
+            for t in T:
+                if y[t][i].solution_value() > 0.9:
+                    print(IAssets[i], 'used in day', TimeSteps[t], 'of', 365*20)
 else:
     print('The problem does not have an optimal solution.')
